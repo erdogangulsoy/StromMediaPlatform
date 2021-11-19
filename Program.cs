@@ -33,7 +33,8 @@ namespace StromMediaPlatform
                {
                    webBuilder.ConfigureKestrel(serverOptions =>
                    {
-                       serverOptions.Limits.MaxRequestBodySize = 500000000;
+                       serverOptions.Limits.MaxRequestBodySize = 500000000; //428mb
+                       serverOptions.Limits.RequestHeadersTimeout = new TimeSpan(0, 20, 0);
                    });
                    webBuilder.UseStartup<Startup>();
                });
