@@ -1,0 +1,41 @@
+﻿@page
+@model StromMediaPlatform.Pages.HostedVideoPageModel
+@{
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hosted Video Page</title>
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="~/hls/hls.min.js"></script>
+</head>
+<body>
+    <div class="ratio ratio-16x9">
+        <video id="video" controls></video>
+    </div>
+    <script>
+            var video = document.getElementById('video');
+            if (Hls.isSupported()) {
+                var hls = new Hls({
+                    //debug: true,
+                });
+                hls.loadSource('@Model.Video');
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+                    video.muted = true;
+                    //video.stop();
+                });
+            }
+            else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = '@Model.Video';
+                video.addEventListener('canplay', function () {
+                   //video.stop();
+                });
+            }
+    </script>
+        <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

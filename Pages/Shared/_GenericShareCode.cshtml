@@ -1,0 +1,67 @@
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration config;
+@{
+    string timeStamp = DateTime.Now.Ticks.ToString();
+
+}
+
+<environment include="Development">
+    <video height="400" id="video-@timeStamp" controls preload="none" class="my-4"></video>
+</environment>
+
+<div class="mt-4">
+
+    <p>Embed the link between head tags</p>
+    <div class="border p-4 mb-4">
+        <code>&lt;script</code> src="@config["HLSPlayerJavascriptFile"]"<code>&gt;&lt;/script&gt;</code>
+    </div>
+
+    <p>Video Player</p>
+    <div class="border p-4 mb-4">
+        &lt;video height="400" id="video-@timeStamp" controls class="my-4"&gt;&lt;/video&gt;
+    </div>
+
+    <p>Copy & Paste Script Content</p>
+    <div class="border p-4">
+        <pre><code class="text-danger">&lt;script&gt;</code>
+  var video = document.getElementById('video-@timeStamp');
+  if (Hls.isSupported()) {
+     var hls = new Hls({
+          debug: true,
+       });
+  hls.loadSource('@Model.VideoUrl');
+  hls.attachMedia(video);
+  hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+            video.muted = true;
+        });
+}
+<code class="text-danger">&lt;/script&gt;</code></pre>
+
+
+    </div>
+
+
+</div>
+<environment include="Development">
+    <script>
+    var video = document.getElementById('video-@timeStamp');
+    if (Hls.isSupported()) {
+        var hls = new Hls({
+            debug: true,
+        });
+        hls.loadSource('@Model.VideoUrl');
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+            video.muted = true;
+        });
+    }
+    // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
+    // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
+    // This is using the built-in support of the plain video element, without using hls.js.
+    else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = '@Model.VideoUrl';
+        video.addEventListener('canplay', function () {
+           
+        });
+    }
+    </script>
+</environment>
