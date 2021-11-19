@@ -30,7 +30,7 @@ namespace StromMediaPlatform.Pages
         public IFormFile Upload { get; set; }
         public async Task OnPostAsync()
         {
-            Thread.Sleep(10000);
+          
             
             if (Upload == null)
             {
