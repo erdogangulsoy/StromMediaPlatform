@@ -16,7 +16,7 @@
             <input class="form-control" type="file" asp-for="Upload" accept=".mp4">
         </div>
         <div class="d-grid gap-2 col-12 col-md-6 mx-auto">
-            <button type="button" class="btn btn-success btn" onclick="start()" id="btnStart">UPLOAD</button>
+            <button type="button" class="btn btn-success btn" onclick="start()" id="btnStart" disabled>UPLOAD</button>
         </div>
     </form>
 </div>
@@ -30,9 +30,33 @@
 
     const input = document.getElementById('Upload');
 
+    input.addEventListener("change", (e)=> {
+
+        const files = e.target.files;
+
+        if (!files.length) {
+            return;
+        }
+
+
+        document.getElementById("btnStart").disabled = false;
+
+
+    }, false);
+   
+
     document.getElementById("videoForm").addEventListener("submit", function (event) {
         event.preventDefault()
     });
+
+    function showError(error) {
+        const err = `<div class="p-4" id="errorContainer">
+            <div class="alert alert-danger" role="alert">${error}</div>
+</div>`;
+
+        document.body.insertAdjacentHTML('beforebegin', err);
+
+    }
 
     function Upload(selectedFile) {
         let formData = new FormData(document.forms[0]);
@@ -46,15 +70,7 @@
 
                 if (data.hasOwnProperty("error")) {
 
-
-
-                    const err = `<div class="p-4" id="errorContainer">
-            <div class="alert alert-danger" role="alert">${data.error}</div>
-</div>`;
-
-                    document.body.insertAdjacentHTML('beforebegin', err);
-
-                   
+                    showError(data.error);
 
                     return;
 
@@ -100,8 +116,12 @@
         const files = input.files;
 
         if (!files.length) {
+            showError("Please choose a file first");
             return;
         }
+
+      
+
         disableBackDrop();
         document.body.classList.add("overflow-hidden");
         document.body.insertAdjacentHTML("afterbegin", '<div class="offcanvas-backdrop fade show"></div>');
