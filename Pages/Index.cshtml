@@ -69,7 +69,7 @@
             var percent = (event.loaded / event.total) * 100;
             var tt = Math.round(percent);
             console.log(tt);
-            document.getElementById("btnStart").value = "UPLOADING... " + tt + "%";
+            document.getElementById("btnStart").innerHTML = "UPLOADING... " + tt.toString() + "%";
 
         }
         xhr.onerror = () => {
