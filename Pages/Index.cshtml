@@ -6,17 +6,19 @@
 
 
 
-
+<div class="container d-none" id="errorContainer">
+    <div class="alert alert-danger m-4" role="alert"></div>
+</div>
 
 
 <div class="container my-5">
-    <form method="post" enctype="multipart/form-data"  id="videoForm">
+    <form method="post" enctype="multipart/form-data" id="videoForm">
         @Html.AntiForgeryToken()
         <div class="mb-3">
             <input class="form-control" type="file" asp-for="Upload" accept=".mp4">
         </div>
         <div class="d-grid gap-2 col-12 col-md-6 mx-auto">
-            <button type="button" class="btn btn-success btn" onclick="start()" id="btnStart" disabled>UPLOAD</button>
+            <button type="button" class="btn btn-success btn" onclick="start()" id="btnStart">UPLOAD</button>
         </div>
     </form>
 </div>
@@ -30,7 +32,7 @@
 
     const input = document.getElementById('Upload');
 
-    input.addEventListener("change", (e)=> {
+    input.addEventListener("change", (e) => {
 
         const files = e.target.files;
 
@@ -43,19 +45,17 @@
 
 
     }, false);
-   
+
 
     document.getElementById("videoForm").addEventListener("submit", function (event) {
         event.preventDefault()
     });
 
     function showError(error) {
-        const err = `<div class="p-4" id="errorContainer">
-            <div class="alert alert-danger" role="alert">${error}</div>
-</div>`;
+        var errorContainer = $("#errorContainer");
 
-        document.body.insertAdjacentHTML('beforebegin', err);
-
+        errorContainer.find(".alert").html(error);
+        errorContainer.removeClass("d-none");
     }
 
     function Upload(selectedFile) {
@@ -89,27 +89,16 @@
 
         }
         xhr.onerror = () => {
-            console.log("Something went wrong");
+            showError("Aax error!");
         };
-      
+
         xhr.open('post', '', true);
         xhr.send(formData);
     };
 
-    function disableBackDrop() {
-        document.body.classList.remove("overflow-hidden");
-
-        var backDrop = document.getElementsByClassName("offcanvas-backdrop");
-        if (backDrop !== undefined && backDrop.length === 1) {
-            backDrop.remove();
-        }
-
-        //cleanup error message
-
-    }
-
     function clearError() {
-
+        var errorContainer = $("#errorContainer");
+        errorContainer.addClass("d-none");
     }
 
     function start() {
@@ -120,11 +109,8 @@
             return;
         }
 
-      
+        clearError();
 
-        disableBackDrop();
-        document.body.classList.add("overflow-hidden");
-        document.body.insertAdjacentHTML("afterbegin", '<div class="offcanvas-backdrop fade show"></div>');
 
         selectedFile = files[0];
         Upload(selectedFile);
