@@ -1,7 +1,7 @@
 ﻿@page
 @model StromMediaPlatform.Pages.HostedVideoPageModel
-@{
-}
+@{ Layout = null; }
+
 
 <!doctype html>
 <html lang="en">
@@ -26,16 +26,16 @@
                 hls.attachMedia(video);
                 hls.on(Hls.Events.MEDIA_ATTACHED, function () {
                     video.muted = true;
-                    //video.stop();
+
                 });
             }
             else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 video.src = '@Model.Video';
                 video.addEventListener('canplay', function () {
-                   //video.stop();
+
                 });
             }
     </script>
-        <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

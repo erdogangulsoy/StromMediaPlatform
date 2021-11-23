@@ -13,14 +13,21 @@ namespace StromMediaPlatform
 {
     public class Startup
     {
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+
+            services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(x =>
+            {
+                x.MultipartBodyLengthLimit = 500000000; //428mb
+
+            });
+
         }
 
 
-       
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

@@ -1,0 +1,28 @@
+﻿<!Doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="~/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/site.css" rel="stylesheet" />
+    <title>Strom Video Platform</title>
+    @RenderSection("Header", required: false)
+</head>
+<body>
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+        <div class="container ">
+            <a href="/" class="d-flex justify-content-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+                <img src="/halkbank-logo.png" height="35" />
+                <span class="fs-4 ms-3">Strom Media Upload Platform</span>
+            </a>
+        </div>
+    </header>
+
+    @RenderBody()
+
+    <script src="~/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

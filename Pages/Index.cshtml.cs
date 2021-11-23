@@ -28,40 +28,41 @@ namespace StromMediaPlatform.Pages
         }
         [BindProperty]
         public IFormFile Upload { get; set; }
-        public async Task OnPostAsync()
+        public async Task<JsonResult> OnPostAsync()
         {
-          
             
             if (Upload == null)
             {
                 Error = "No file received";
-                return;
+                return new JsonResult(new { Error });
             }
 
             if (!Upload.FileName.EndsWith(".mp4"))
             {
                 Error = "Only .mp4 file type is accepted";
-                return;
+                return new JsonResult(new { Error });
             }
 
             string extension = Path.GetExtension(Upload.FileName);
-            if (extension==null)
+            if (extension == null)
             {
                 Error = "Only .mp4 file type is accepted";
-                return;
+                return new JsonResult(new { Error });
             }
+
 
             string fileName = $"{Crypto.GenerateRandomString(12, false)}{extension}";
 
             var file = Path.Combine(configuration["VideoFolder"], fileName);
-            using (var fileStream = new FileStream(file, FileMode.Create))
+            using (var fileStream = new FileStream(file, FileMode.CreateNew))
             {
                 await Upload.CopyToAsync(fileStream);
             }
             VideoUrl = HttpUtility.HtmlEncode($"{configuration["Host"]}/{fileName}/master.m3u8");
-            //VideoUrl = "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8";
-
+           
             loggger.Information("{url} has been uploaded", VideoUrl);
+
+            return new JsonResult(new { VideoUrl });
 
         }
 

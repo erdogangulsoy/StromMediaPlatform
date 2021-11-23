@@ -1,101 +1,113 @@
 ﻿@page
 @model StromMediaPlatform.Pages.IndexModel
-@inject Microsoft.Extensions.Configuration.IConfiguration config;
+
 @{ }
 
-<!doctype html>
-<html lang="en">
-
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Bootstrap CSS -->
-    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="~/site.css" rel="stylesheet" />
-    <title>Strom Video Platform</title>
-</head>
-
-<body>
-    <script src="~/hls/hls.min.js"></script>
-    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-        <div class="container ">
-            <a href="/" class="d-flex justify-content-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-                <img src="/halkbank-logo.png" height="35" />
-                <span class="fs-4 ms-3">Strom Media Upload Platform</span>
-            </a>
-        </div>
-    </header>
 
 
-    @if (!String.IsNullOrEmpty(Model.Error))
-    {
-<div class="p-4">
-    <div class="alert alert-danger" role="alert">
-        @Model.Error
-    </div>
-</div>}
 
 
-    @if (!String.IsNullOrEmpty(Model.VideoUrl))
-    {
-<div class="container">
-    <div class="text-center mt-4">
-        <iframe src="@config["HostedVideoPage"]?video=@Model.VideoUrl" height="200" allowfullscreen></iframe>
-    </div>
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link active" href="#" id="iframe-tab" data-bs-toggle="tab" data-bs-target="#iframe" role="tab" aria-controls="iframe" aria-selected="true">IFrame</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" id="generic-tab" data-bs-toggle="tab" data-bs-target="#generic" role="tab" aria-controls="generic">Embed</a>
-        </li>
-    </ul>
-    <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="iframe" role="tabpanel" aria-labelledby="iframe-tab"><partial name="_IFRAMEShareCode" /></div>
-        <div class="tab-pane fade" id="generic" role="tabpanel" aria-labelledby="generic-tab"><partial name="_GenericShareCode" /></div>
-    </div>
-</div> }
-else
-{
 
 
 <div class="container my-5">
-    <form method="post" enctype="multipart/form-data" id="videoForm">
+    <form method="post" enctype="multipart/form-data"  id="videoForm">
         @Html.AntiForgeryToken()
         <div class="mb-3">
             <input class="form-control" type="file" asp-for="Upload" accept=".mp4">
         </div>
         <div class="d-grid gap-2 col-12 col-md-6 mx-auto">
-            <button type="submit" class="btn btn-success btn">UPLOAD</button>
+            <button type="button" class="btn btn-success btn" onclick="start()" id="btnStart">UPLOAD</button>
         </div>
     </form>
-</div>}
+</div>
 
 
 
 
 
-    <script src="~/jquery/jquery-3.6.0.min.js"></script>
-    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        $(function () {
+<script>
 
-            $("#videoForm").on("submit", function () {
-                $("body").addClass("overflow-hidden");
-                $('<div class="offcanvas-backdrop fade show"></div>').appendTo("body");
+    const input = document.getElementById('Upload');
 
-            
-                var btn = $(this).find("button");
-                btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...');
-               
-            });
+    document.getElementById("videoForm").addEventListener("submit", function (event) {
+        event.preventDefault()
+    });
 
-        })
-    </script>
+    function Upload(selectedFile) {
+        let formData = new FormData(document.forms[0]);
+        var xhr = new XMLHttpRequest();
 
-</body>
 
-</html>
+        xhr.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                console.log('Upload completed');
+                const data = JSON.parse(this.response);
+
+                if (data.hasOwnProperty("error")) {
+
+
+
+                    const err = `<div class="p-4" id="errorContainer">
+            <div class="alert alert-danger" role="alert">${data.error}</div>
+</div>`;
+
+                    document.body.insertAdjacentHTML('beforebegin', err);
+
+                   
+
+                    return;
+
+                }
+
+                if (data.hasOwnProperty("videoUrl")) {
+                    setTimeout(function () { window.location.href = "/uploadresult?videourl=" + data.videoUrl; }, 1000);
+                }
+            }
+        };
+        xhr.upload.onprogress = () => {
+            var percent = (event.loaded / event.total) * 100;
+            var tt = Math.round(percent);
+            console.log(tt);
+            document.getElementById("btnStart").value = "UPLOADING... " + tt + "%";
+
+        }
+        xhr.onerror = () => {
+            console.log("Something went wrong");
+        };
+      
+        xhr.open('post', '', true);
+        xhr.send(formData);
+    };
+
+    function disableBackDrop() {
+        document.body.classList.remove("overflow-hidden");
+
+        var backDrop = document.getElementsByClassName("offcanvas-backdrop");
+        if (backDrop !== undefined && backDrop.length === 1) {
+            backDrop.remove();
+        }
+
+        //cleanup error message
+
+    }
+
+    function clearError() {
+
+    }
+
+    function start() {
+        const files = input.files;
+
+        if (!files.length) {
+            return;
+        }
+        disableBackDrop();
+        document.body.classList.add("overflow-hidden");
+        document.body.insertAdjacentHTML("afterbegin", '<div class="offcanvas-backdrop fade show"></div>');
+
+        selectedFile = files[0];
+        Upload(selectedFile);
+    }
+
+</script>

@@ -1,0 +1,32 @@
+﻿@page
+@model StromMediaPlatform.Pages.UploadResultModel
+@inject Microsoft.Extensions.Configuration.IConfiguration config;
+@{
+}
+
+@section Header{
+    <script src="~/hls/hls.min.js"></script>
+}
+
+
+@if (!String.IsNullOrEmpty(Model.Error))
+{
+    <div class="p-4">
+        <div class="alert alert-danger" role="alert">
+            @Model.Error
+        </div>
+    </div>
+}
+
+
+@if (!String.IsNullOrEmpty(Model.VideoUrl))
+{
+    <div class="container">
+        <div class="text-center mt-4">
+            <iframe src="@config["HostedVideoPage"]?video=@Model.VideoUrl" height="200" allowfullscreen></iframe>
+        </div>
+        <div class="border p-4" id="iframe" role="tabpanel" aria-labelledby="iframe-tab"><partial name="_IFRAMEShareCode" /></div>
+    </div>
+}
+
+
