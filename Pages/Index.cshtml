@@ -71,9 +71,8 @@
                 if (data.hasOwnProperty("error")) {
 
                     showError(data.error);
-
+                    resetUpload();
                     return;
-
                 }
 
                 if (data.hasOwnProperty("videoUrl")) {
@@ -100,6 +99,11 @@
         var errorContainer = $("#errorContainer");
         errorContainer.addClass("d-none");
     }
+    function resetUpload() {
+        var btn = $("#btnStart");
+        btn.html("UPLOAD");
+       
+    }
 
     function start() {
         const files = input.files;
@@ -108,7 +112,7 @@
             showError("Please choose a file first");
             return;
         }
-
+        resetUpload();
         clearError();
 
 
