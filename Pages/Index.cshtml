@@ -83,8 +83,8 @@
                 }
 
                 if (data.hasOwnProperty("videoUrl")) {
-                    showIFrameEmbed(data.videoUrl);
-                    //setTimeout(function () { window.location.href = "/uploadresult?videourl=" + data.videoUrl; }, 1000);
+
+                     window.location.href = "/uploadresult?videourl=" + data.videoUrl;
                 }
             }
         };
@@ -96,7 +96,7 @@
 
         }
         xhr.onerror = () => {
-            showError("Aax error!");
+            showError("Ajax error!");
         };
 
         xhr.open('post', '', true);
@@ -113,16 +113,7 @@
 
     }
 
-    function showIFrameEmbed(videoUrl) {
-        const output = `
-    <div class="p-4 my-4">
-        <code>&lt;iframe</code> src="@config["HostedVideoPage"]?video=${videoUrl}" height="400" allowfullscreen<code>&gt;&lt;/iframe&gt;</code>
-    </div>`;
-
-        $("#embed").removeClass("d-none");
-
-    }
-
+   
 
     function start() {
         const files = input.files;

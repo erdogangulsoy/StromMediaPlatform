@@ -14,6 +14,7 @@ using StromMediaPlatform.Utils;
 
 namespace StromMediaPlatform.Pages
 {
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public class IndexModel : PageModel
     {
         private readonly ILogger loggger;

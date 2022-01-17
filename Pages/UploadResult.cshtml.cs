@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace StromMediaPlatform.Pages
 {
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public class UploadResultModel : PageModel
     {
         public string Error { get; private set; }

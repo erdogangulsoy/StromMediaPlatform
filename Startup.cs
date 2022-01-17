@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +25,9 @@ namespace StromMediaPlatform
                 x.MultipartBodyLengthLimit = 500000000; //428mb
 
             });
+
+            services.AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo(@"C:\videos"));
 
         }
 

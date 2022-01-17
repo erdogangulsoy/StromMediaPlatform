@@ -5,7 +5,7 @@
 }
 
 @section Header{
-    <script src="~/hls/hls.min.js"></script>
+    <script src="~/player/hls.min.js"></script>
 }
 
 
@@ -29,4 +29,11 @@
     </div>
 }
 
-
+@section Scripts{
+    <script>
+        window.onpopstate = function (event) {
+            debugger;
+            alert("location: " + document.location + ", state: " + JSON.stringify(event.state));
+        };
+    </script>
+}
