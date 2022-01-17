@@ -84,7 +84,7 @@
 
                 if (data.hasOwnProperty("videoUrl")) {
 
-                     window.location.href = "/uploadresult?videourl=" + data.videoUrl;
+                    window.location.replace("/uploadresult?videourl=" + data.videoUrl);
                 }
             }
         };
