@@ -82,6 +82,8 @@
                     return;
                 }
 
+               
+                document.getElementById('btnStart').removeAttribute("disabled");
                 if (data.hasOwnProperty("videoUrl")) {
 
                     window.location.replace("/uploadresult?videourl=" + data.videoUrl);
@@ -90,9 +92,9 @@
         };
         xhr.upload.onprogress = () => {
             var percent = (event.loaded / event.total) * 100;
-            var tt = Math.round(percent);
-            console.log(tt);
-            document.getElementById("btnStart").innerHTML = "UPLOADING... " + tt.toString() + "%";
+            var percentRounded = Math.round(percent);
+            console.log(percentRounded);
+            document.getElementById("btnStart").innerHTML = "UPLOADING... " + percentRounded.toString() + "%";
 
         }
         xhr.onerror = () => {
@@ -111,9 +113,9 @@
         var btn = $("#btnStart");
         btn.html("UPLOAD");
 
-    } 
+    }
 
-   
+
 
     function start() {
         const files = input.files;
@@ -122,9 +124,10 @@
             showError("Please choose a file first");
             return;
         }
+
         resetUpload();
         clearError();
-
+        document.getElementById('btnStart').setAttribute("disabled", "disabled");
 
         selectedFile = files[0];
         Upload(selectedFile);
